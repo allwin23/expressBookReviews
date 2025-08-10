@@ -36,7 +36,43 @@ public_users.get('/isbn/:isbn',function (req, res) {
     res.status(402).json({message:"the book is not found"})
   }
 
- });
+  public_users.get('/promise-isbn/:isbn', function (req, res) {
+    const isbn = req.params.isbn;
+    axios.get(`http://localhost:5001/isbn/${isbn}`)
+        .then(response => res.send(response.data))
+        .catch(err => res.status(500).json({ message: "Error fetching book by ISBN", error: err.message }));
+});
+
+// 📖 Task 11: Get book details by ISBN using async-await
+public_users.get('/async-isbn/:isbn', async function (req, res) {
+    const isbn = req.params.isbn;
+    try {
+        const response = await axios.get(`http://localhost:5001/isbn/${isbn}`);
+        res.send(response.data);
+    } catch (err) {
+        res.status(500).json({ message: "Error fetching book by ISBN", error: err.message });
+    }
+}); });
+ public_users.get('/promise-books', function (req, res) {
+    axios.get('http://localhost:5001/')
+        .then(response => {
+            res.send(response.data);
+        })
+        .catch(err => {
+            res.status(500).json({ message: "Error fetching books", error: err.message });
+        });
+});
+
+// 3️⃣ Async-await version
+public_users.get('/async-books', async function (req, res) {
+    try {
+        const response = await axios.get('http://localhost:5001/');
+        res.send(response.data);
+    } catch (err) {
+        res.status(500).json({ message: "Error fetching books", error: err.message });
+    }
+});
+
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
@@ -70,6 +106,40 @@ public_users.get('/review/:isbn',function (req, res) {
   }else{
     res.status(402).json({message:"the book is not found"})
   }
+});
+public_users.get('/promise-author/:author', function (req, res) {
+    const author = req.params.author;
+    axios.get(`http://localhost:5001/author/${author}`)
+        .then(response => res.send(response.data))
+        .catch(err => res.status(500).json({ message: "Error fetching books by author", error: err.message }));
+});
+
+public_users.get('/async-author/:author', async function (req, res) {
+    const author = req.params.author;
+    try {
+        const response = await axios.get(`http://localhost:5001/author/${author}`);
+        res.send(response.data);
+    } catch (err) {
+        res.status(500).json({ message: "Error fetching books by author", error: err.message });
+    }
+});
+
+/* ---------------- TASK 13 (Title) ---------------- */
+public_users.get('/promise-title/:title', function (req, res) {
+    const title = req.params.title;
+    axios.get(`http://localhost:5001/title/${title}`)
+        .then(response => res.send(response.data))
+        .catch(err => res.status(500).json({ message: "Error fetching books by title", error: err.message }));
+});
+
+public_users.get('/async-title/:title', async function (req, res) {
+    const title = req.params.title;
+    try {
+        const response = await axios.get(`http://localhost:5001/title/${title}`);
+        res.send(response.data);
+    } catch (err) {
+        res.status(500).json({ message: "Error fetching books by title", error: err.message });
+    }
 });
 
 module.exports.general = public_users;
