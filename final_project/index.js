@@ -11,7 +11,20 @@ app.use(express.json());
 app.use("/customer",session({secret:"fingerprint_customer",resave: true, saveUninitialized: true}))
 
 app.use("/customer/auth/*", function auth(req,res,next){
-//Write the authenication mechanism here
+if(req.session.authenticated){
+    const token = req.session.authenticated.accesstoken
+    jwt.verify(token,"access",(err,user)=>{
+        if(err){
+            res.status(403).json({message:"the user is not authenticated"})
+        }else{
+            req.user-user;
+            next();
+
+        }
+    })
+}else{
+    res.status(403).json({message:"the user has not logined"})
+}
 });
  
 const PORT =5000;
@@ -20,3 +33,4 @@ app.use("/customer", customer_routes);
 app.use("/", genl_routes);
 
 app.listen(PORT,()=>console.log("Server is running"));
+
